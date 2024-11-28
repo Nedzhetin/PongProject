@@ -1,0 +1,46 @@
+* {
+  font-family: "Courier New", Courier, monospace;
+  padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+}
+
+#buttonOne {
+  height: 40px;
+  border: rgb(4, 12, 21) solid 3px;
+  background-color: white;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 1000;
+  text-align: center;
+  margin: 20px;
+}
+
+#playerName {
+  height: 40px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 1000;
+  text-align: center;
+}
+
+.playerOneName {
+  border: rgb(49, 112, 188) solid 3px;
+}
+
+.playerTwoName {
+  border: rgb(164, 25, 53) solid 3px;
+}
+
+.canvas {
+  border: black solid 2px;
+}

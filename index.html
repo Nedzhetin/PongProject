@@ -1,19 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="A neon remake of the classic Pong — play against the CPU or a friend.">
+  <meta name="theme-color" content="#05060f">
+  <title>Neon Pong</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2305060f'/%3E%3Crect x='5' y='8' width='3' height='16' rx='1.5' fill='%2322d3ee'/%3E%3Crect x='24' y='8' width='3' height='16' rx='1.5' fill='%23f43f7f'/%3E%3Ccircle cx='16' cy='14' r='3' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="container">
-    <input id="playerName" class="playerOneName" placeholder="Player 1"> </input>
-    <button id="buttonOne" onclick="commitFunktion()">commit</button>
+  <div class="app" id="app" data-state="menu">
+    <header class="scoreboard" aria-live="polite">
+      <div class="player p1">
+        <span class="player-name" id="nameOne">Player 1</span>
+        <span class="player-score" id="scoreOne">0</span>
+      </div>
+      <div class="match-info">
+        <span class="match-label">First to</span>
+        <span class="match-target" id="targetLabel">7</span>
+      </div>
+      <div class="player p2">
+        <span class="player-score" id="scoreTwo">0</span>
+        <span class="player-name" id="nameTwo">Player 2</span>
+      </div>
+    </header>
+
+    <div class="court" id="court">
+      <canvas id="canvas" aria-label="Pong playing field"></canvas>
     </div>
 
-    
+    <footer class="toolbar">
+      <p class="controls-hint" id="controlsHint"></p>
+      <div class="toolbar-actions">
+        <button class="icon-btn" id="pauseBtn" type="button" aria-label="Pause (P)" title="Pause (P)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        </button>
+        <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle sound (M)" title="Sound (M)">
+          <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="stroke" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+          <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="stroke" d="M17 9l5 6M22 9l-5 6"/></svg>
+        </button>
+      </div>
+    </footer>
+  </div>
 
-    <script src="script.js"></script>
+  <!-- Main menu -->
+  <section class="overlay" id="menu" aria-labelledby="menuTitle">
+    <div class="panel menu-panel">
+      <h1 class="logo" id="menuTitle"><span class="logo-neon">NEON</span> PONG</h1>
+      <p class="tagline">The 1972 classic, rebuilt.</p>
+
+      <form id="setupForm" autocomplete="off">
+        <fieldset class="field">
+          <legend>Mode</legend>
+          <div class="segmented" role="radiogroup">
+            <label><input type="radio" name="mode" value="cpu" checked><span>1 Player</span></label>
+            <label><input type="radio" name="mode" value="pvp"><span>2 Players</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="field" id="difficultyField">
+          <legend>CPU difficulty</legend>
+          <div class="segmented" role="radiogroup">
+            <label><input type="radio" name="difficulty" value="easy"><span>Easy</span></label>
+            <label><input type="radio" name="difficulty" value="normal" checked><span>Normal</span></label>
+            <label><input type="radio" name="difficulty" value="hard"><span>Hard</span></label>
+          </div>
+        </fieldset>
+
+        <div class="names">
+          <label class="name-input p1">
+            <span>Left player</span>
+            <input id="inputOne" name="nameOne" maxlength="12" placeholder="Player 1" spellcheck="false">
+          </label>
+          <label class="name-input p2">
+            <span>Right player</span>
+            <input id="inputTwo" name="nameTwo" maxlength="12" placeholder="Player 2" spellcheck="false">
+          </label>
+        </div>
+
+        <fieldset class="field">
+          <legend>Points to win</legend>
+          <div class="segmented" role="radiogroup">
+            <label><input type="radio" name="target" value="5"><span>5</span></label>
+            <label><input type="radio" name="target" value="7" checked><span>7</span></label>
+            <label><input type="radio" name="target" value="11"><span>11</span></label>
+          </div>
+        </fieldset>
+
+        <button class="btn btn-primary" type="submit">Start game</button>
+      </form>
+
+      <div class="keys">
+        <div><kbd>W</kbd><kbd>S</kbd> left paddle</div>
+        <div class="keys-p2"><kbd>↑</kbd><kbd>↓</kbd> right paddle</div>
+        <div><kbd>P</kbd> pause</div>
+        <div><kbd>M</kbd> mute</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pause -->
+  <section class="overlay" id="pause" hidden aria-labelledby="pauseTitle">
+    <div class="panel small-panel">
+      <h2 class="panel-title" id="pauseTitle">Paused</h2>
+      <div class="btn-stack">
+        <button class="btn btn-primary" id="resumeBtn" type="button">Resume</button>
+        <button class="btn" id="restartBtn" type="button">Restart match</button>
+        <button class="btn btn-ghost" id="quitBtn" type="button">Quit to menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game over -->
+  <section class="overlay" id="gameover" hidden aria-labelledby="winnerTitle">
+    <div class="panel small-panel">
+      <p class="eyebrow">Match over</p>
+      <h2 class="panel-title winner" id="winnerTitle">Player 1 wins</h2>
+      <p class="final-score" id="finalScore">7 – 4</p>
+      <dl class="stats">
+        <div><dt>Longest rally</dt><dd id="statRally">0</dd></div>
+        <div><dt>Total hits</dt><dd id="statHits">0</dd></div>
+        <div><dt>Top speed</dt><dd id="statSpeed">0</dd></div>
+        <div><dt>Match time</dt><dd id="statTime">0:00</dd></div>
+      </dl>
+      <div class="btn-stack">
+        <button class="btn btn-primary" id="rematchBtn" type="button">Rematch</button>
+        <button class="btn btn-ghost" id="menuBtn" type="button">Main menu</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
 </body>
 </html>
